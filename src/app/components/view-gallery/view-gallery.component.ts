@@ -10,6 +10,7 @@ import { FormGroup, NgForm } from '@angular/forms'
 import { ViewImageComponent } from '../../components/view-image/view-image.component';
 import { ViewImageService } from '../../shared/services/view-image.service';
 
+declare var jQuery:any;
 
 @Component({
   selector: 'app-view-gallery',
@@ -43,6 +44,8 @@ export class ViewGalleryComponent implements OnInit {
   public gallery: Gallery
   public commentsArrayReversed: Array<any>
   public galleryComment: GalleryComment = new GalleryComment()
+  public galleryCommentForEditing: GalleryComment = new GalleryComment()
+  public originalGalleryCommentBeforeEditing: GalleryComment = new GalleryComment()
   public isUserAuthenticated: boolean
   public loggedUserEmail: string
   public disableAnimations: boolean = true
@@ -53,10 +56,16 @@ export class ViewGalleryComponent implements OnInit {
   // @ViewChild("addGalleryCommentForm") addGalleryCommentForm: FormGroup // radilo je i sa FormGroup samo sto izgleda nije pravilno jer je FormGroup za model driven ili ti reactive forme, a ova tvoja je template driven. Vidi ovde https://stackoverflow.com/questions/48681287/reset-form-from-parent-component. Inace ideju za FormGroup pokupio ovde: https://blog.angular-university.io/introduction-to-angular-2-forms-template-driven-vs-model-driven/ i https://codecraft.tv/courses/angular/forms/submitting-and-resetting/
   @ViewChild("addGalleryCommentForm") addGalleryCommentForm: NgForm //https://stackoverflow.com/questions/48681287/reset-form-from-parent-component
   @ViewChild("commentsContainer") commentsContainer: ElementRef
+  @ViewChild("editGalleryCommentModalButtonTrigger") editGalleryCommentModalButtonTrigger: ElementRef
+  @ViewChild("editGalleryCommentModal") editGalleryCommentModal: ElementRef
   @ViewChild("viewImageViewContainerRef", {read: ViewContainerRef}) viewImageViewContainerRef: ViewContainerRef;
   @ViewChild("galleryStart") galleryStart: ElementRef
 
-  constructor(private galleryService: GalleryService, private route: ActivatedRoute, private renderer: Renderer2, private router: Router, private viewImageService: ViewImageService) {
+  @ViewChild("modalCloseButton") modalCloseButton: ElementRef
+  @ViewChild("btnSubmitCommentChanges") btnSubmitCommentChanges: ElementRef
+  @ViewChild("modalCancelButton") modalCancelButton: ElementRef
+
+  constructor(private galleryService: GalleryService, private route: ActivatedRoute, private renderer: Renderer2, private router: Router, private viewImageService: ViewImageService, private elRef: ElementRef) {
     
     // ******************************************************************** //
     // Pomocu ovoga uspevam da mi se komponenta ne refreshuje (ne inicijalizuje ponovo, nego da se reuse-uje) kad je dve razlicite rute otvaraju i zasad radi!!! Ovo resenje je inace kombinacija sa ova dva linka https://github.com/angular/angular/issues/12446 (vidi odgovor od DanielKucal, a slicnu stvar imas od istog korisnika ovde https://stackoverflow.com/questions/44875644/custom-routereusestrategy-for-angulars-child-module/44876414#44876414) i https://stackoverflow.com/questions/45497208/how-to-change-to-route-with-same-component-without-page-reload . Sa prvog linka koristim ovaj deo iza returna i to sto unutar app-routing modula stavljam  data: { reuse: true } na rute koje zelim da se reuse-uju (reuse znaci da se ne inicijalizuju ponovo kad ih aktiviram nego da koriste vec prethodno izrenderovane stranice), a sa drugog linka sam skinuo ideju da ovo stavim u konstruktor komponente koju zelim da reuseujem. Metoda koju koristim se moze naci ovde https://angular.io/api/router/RouteReuseStrategy. 
@@ -134,6 +143,11 @@ export class ViewGalleryComponent implements OnInit {
       }
   		
   	})
+
+    jQuery(this.elRef.nativeElement).on('shown.bs.modal', '#exampleModalCenter', function () {
+      console.log('radim');
+      jQuery('#editedCommentBody').trigger('focus');
+    });
 
   }
  
@@ -275,6 +289,33 @@ export class ViewGalleryComponent implements OnInit {
 
     }
   }
+
+  public editGalleryComment(comment: any){
+    console.log(comment);
+    this.galleryCommentForEditing.id = comment.id
+    this.galleryCommentForEditing.commentBody = comment.comment_body
+    console.log(this.galleryCommentForEditing);
+    this.originalGalleryCommentBeforeEditing.commentBody = comment.comment_body
+  }
+
+  public updateGalleryComment(editedGalleryComment: GalleryComment){
+    console.log(editedGalleryComment);
+    const editedGalleryCommentBody = editedGalleryComment.commentBody
+    
+    this.showLoaderDisablePageElements(true)
+    this.disableModalElements(true)
+     
+     setTimeout(() => {
+       this.editGalleryCommentModalButtonTrigger.nativeElement.click()
+       this.showLoaderDisablePageElements(false)
+       this.disableModalElements(false)
+       let updatedCommentInArray: any = this.commentsArrayReversed.find(comment => comment.id === editedGalleryComment.id)
+       // EKSTRA!!! Kao sto vidis mozes ovde da dodas properti koji ne postoji na tipu GalleryComment, tako sto ga samo prethodno pretvoris u tip any!!!
+       updatedCommentInArray.comment_body = editedGalleryCommentBody
+       updatedCommentInArray.updated_at = Date.now()
+     }, 500)
+
+  }
  
   public showLoaderDisablePageElements(show: boolean){
     if(show === true){
@@ -289,6 +330,18 @@ export class ViewGalleryComponent implements OnInit {
       this.disableProgressBar--
       console.log(this.disableProgressBar);
       // this.renderer.setProperty(this.btnAddComment.nativeElement, 'disabled', false)
+    }
+  }
+
+  public disableModalElements(disable: boolean){
+    if(disable === true){
+      this.renderer.setProperty(this.modalCloseButton.nativeElement, 'disabled', true)
+      this.renderer.setProperty(this.btnSubmitCommentChanges.nativeElement, 'disabled', true)
+      this.renderer.setProperty(this.modalCancelButton.nativeElement, 'disabled', true)
+    }else{
+      this.renderer.setProperty(this.modalCloseButton.nativeElement, 'disabled', false)
+      this.renderer.setProperty(this.btnSubmitCommentChanges.nativeElement, 'disabled', false)
+      this.renderer.setProperty(this.modalCancelButton.nativeElement, 'disabled', false)
     }
   }
 
