@@ -1,0 +1,83 @@
+<div [ngStyle]="{'position': 'fixed', 'top': '0', 'z-index': '1000'}">
+	<ng-container #viewImageViewContainerRef></ng-container>
+</div>
+ 
+
+<div #progressBar [ngStyle]="{'visibility': disableProgressBar > 0 ? 'visible' : 'hidden'}" class="progress">
+    <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
+</div>
+<div #disabledOverlay class="myclass-disabled-overlay"></div>
+
+<div #galleryStart></div>
+<div *ngIf="gallery">
+
+	<h1 id="myid-view-gallery-name">{{ gallery.name }}</h1>
+	<h2 id="myid-view-gallery-description">{{ gallery.description }}</h2>
+	
+	<!-- <div class="myclass-view-gallery-container">
+		
+		<a *ngFor="let image of gallery.images" href="{{image.url}}" target="_blank">
+			<img src="{{image.url}}" class="myclass-view-gallery-images" (load)="resizeImageIfVertical($event)">
+		</a>
+	
+	</div> -->
+
+	<div class="card text-left myclass-view-gallery-container">
+	  
+		<div class="myclass-view-gallery-images-container">
+				
+			<a *ngFor="let image of gallery.images" routerLink="/galleries/{{gallery.id}}/{{image.id}}" href="{{image.url}}">
+				<img src="{{image.url}}" class="myclass-view-gallery-images" (load)="resizeImageIfVertical($event)">
+			</a>
+		
+		</div>
+
+	  <div class="card-footer text-muted myclass-view-gallery-footer">
+	    <strong>Created by:</strong> <a routerLink = "/authors/{{gallery.user_id}}">{{ gallery.user.first_name }}  {{ gallery.user.last_name}}</a>
+	    <strong>Created at:</strong> {{ gallery.created_at | date: "MMMM d, y" }}
+	    <span *ngIf="gallery.created_at !== gallery.updated_at"><strong>Last updated at:</strong> {{ gallery.updated_at | date: "MMMM d, y" }}</span>
+	  </div>
+	</div>
+
+	<div *ngIf="isUserAuthenticated" class="myclass-add-comment-form">
+		
+		<form #addGalleryCommentForm = "ngForm" (ngSubmit)="addGalleryComment();">
+		  <div class="form-group">
+		    <label for="exampleFormControlTextarea1">Your comment for this gallery:</label>
+		    <textarea #commentBody="ngModel" [(ngModel)]="galleryComment.commentBody" name="commentBody" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+		  </div>
+		  <div *ngIf="commentBody.invalid && (commentBody.dirty || commentBody.touched)" class="alert alert-danger">
+
+		    <div *ngIf="commentBody.errors.required">
+		      Comment body is required.
+		    </div>
+		    
+		  </div>
+		  <button #btnAddComment [disabled]="!addGalleryCommentForm.valid" type="submit" class="btn btn-primary">Add comment</button>
+		</form>
+		
+	</div>
+
+	<div #commentsContainer class="myclass-gallery-comments">
+		
+		<!-- skinuto sa https://getbootstrap.com/docs/4.0/layout/media-object/ -->
+		<div class="media" [@.disabled]="disableAnimations" @fade *ngFor="let comment of commentsArrayReversed">
+			<!-- reverse pipe napravljen po odogovoru od Thierry Templier sa ovog linka, al sam ga ipak izbrisao zasad https://stackoverflow.com/questions/35703258/invert-angular-2-ngfor -->
+		  <!-- <img class="mr-3" alt="Image"> -->
+			<div class="myclass-account-thumbnail-wrapper mr-3">
+				<div [ngStyle]="{'width': comment.user.profile_image ? '60px' : '40px', 'height': comment.user.profile_image ? '60px' : '40px', 'background-color': comment.user.profile_image && 'transparent'}" class="myclass-account-thumbnail">
+					<img *ngIf="comment.user.profile_image" src="{{comment.user.profile_image}}">
+					<span *ngIf="!comment.user.profile_image">{{comment.user.first_name.charAt(0).toUpperCase()}}
+					</span>
+				</div>
+			</div>
+		  <div class="media-body">
+		    <h5 class="mt-0">{{comment.user.first_name}} {{comment.user.last_name}} <small class="text-muted">{{comment.created_at | date: "longDate"}}</small></h5>
+		    {{comment.comment_body}}
+		  </div>
+		  <a *ngIf="comment.user.email === loggedUserEmail" (click)="deleteGalleryComment(comment)" class="myclass-delete-link"><i class="fas fa-times-circle myclass-image-delete "></i></a>
+		</div>
+	
+	</div>
+
+</div>

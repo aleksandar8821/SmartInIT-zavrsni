@@ -1,0 +1,188 @@
+.progress{
+	/*visibility: hidden;*/
+	z-index: 999;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 10px;
+	border-radius: 0;
+}
+
+.progress .progress-bar{
+	width: 100%;
+	-webkit-animation: progress-bar-stripes 0.5 linear infinite;
+  	animation: progress-bar-stripes 0.5s linear infinite;
+}
+
+/*ideju za ovo pokupio ovde https://stackoverflow.com/questions/9416556/jquery-how-to-disable-the-entire-page*/
+.myclass-disabled-overlay{
+	visibility: hidden;
+	position: fixed;	/*ovde moras dodati fixed da bi ti pokrivao i deo ekrana koji se skroluje (vazi i za visinu i sirinu) https://stackoverflow.com/questions/10945268/disable-whole-page-with-an-overlay*/
+	z-index: 998;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(150, 150, 150, 0.5);
+	/*opacity: 0;*/
+}
+
+#myid-view-gallery-name{
+	font-size: 32px;
+	/*padding-top: 5px;*/
+}
+
+#myid-view-gallery-description{
+	font-size: 20px;
+	font-weight: normal;
+}
+
+.myclass-view-gallery-container{
+	background-color: #E8E8E8FF;
+	border-radius: 25px;
+	border: 2px solid #FF6A00FF;
+	overflow: hidden;
+	margin-bottom: 30px;
+}
+
+.myclass-view-gallery-images-container{
+	/*display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;*/
+
+	/*background-color: #E5E5E5FF;
+	border-radius: 25px;
+	border: 2px solid #FF6A00FF;*/
+	padding: 25px;
+	display: grid;
+	justify-content: space-between;
+	justify-items: center;
+	align-items: center;
+	grid-template-columns: repeat(auto-fill, 30%);
+	grid-row-gap: 25px;
+	margin-bottom: 20px;
+}
+
+.myclass-view-gallery-images-container a{
+	border: 2.5px outset white;
+	width: 100%; /*sa ovim ti njemu zapravo govoris da mu je sirina sto posto od grid kolone!*/
+}
+
+.myclass-view-gallery-images-container a:hover{
+	border-style: inset;
+}
+
+.myclass-view-gallery-images{
+	width: 100%;
+}
+
+.myclass-view-gallery-footer{
+	/*border-radius: 0 0 25px 25px; reseno ipak sa overflow hidden na parentu*/
+	/*border-top: 4px solid white;*/
+	border-top: 4px solid #ffffffd4;
+	/*background-color: darkgray;*/
+	background-color: #a9a9a9a1;
+	color: white !important;
+}
+
+.myclass-add-comment-form{
+	margin-bottom: 15px;
+}
+
+.myclass-gallery-comments{
+	padding-top: 15px;
+}
+
+.myclass-gallery-comments > * + *{
+	margin-top: 15px;
+	border-top: 1.5px solid #636363FF;
+	padding-top: 10px;
+}
+
+.myclass-account-thumbnail-wrapper{
+	width: 60px;
+}
+
+.myclass-account-thumbnail{
+	margin: 0 auto;
+	display: flex;
+	background-color: darkblue;
+	border-radius: 50%;
+	min-width: 40px;
+	min-height: 40px;
+	max-width: 60px;
+	max-height: 60px;	
+}
+
+.myclass-account-thumbnail img{
+	width: 100%;
+	border-radius: 50%;
+}
+
+.myclass-account-thumbnail span{
+	color: white;
+	margin: auto;
+}
+
+.myclass-delete-link{
+	display: inline-block;
+	border-radius: 50%;
+	overflow: hidden;
+	margin: 0 5px;
+}
+
+.myclass-image-delete{
+	line-height: 1;
+	font-size: 35px;
+	color: #BC0000;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+.myclass-image-delete:hover{
+	color: #EA0000;
+	cursor: pointer;
+}
+
+@media (max-width: 991.98px){
+	#myid-view-gallery-name{
+		font-size: 28px;
+	}
+
+	#myid-view-gallery-description{
+		font-size: 18px;
+	}
+
+}
+
+
+@media (max-width: 767.98px){
+
+	#myid-view-gallery-name{
+		font-size: 24px;
+	}
+
+	#myid-view-gallery-description{
+		font-size: 16px;
+	}
+
+	.myclass-view-gallery-container{
+		border-radius: 10px;
+	}
+
+	.myclass-view-gallery-images-container{
+		grid-template-columns: repeat(auto-fill, 32%);
+		padding: 10px;
+		margin-bottom: 15px;
+	}
+
+}
+
+@media (max-width: 575.98px){
+
+	.myclass-view-gallery-images-container{
+		grid-template-columns: repeat(auto-fill, 49%);
+		grid-row-gap: 10px;
+	}
+}

@@ -1,0 +1,65 @@
+<img id="myid-central-logo" src="../../../assets/images/logo12-01.svg">
+<nav #navigation class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">AF galleries</a>
+  <button #btnNavBarToggler class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div #collapsingNavBarDiv class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/galleries">View all galleries</a>
+      </li>
+      <li class="nav-item" *ngIf="authService.isAuthenticated">
+        <a class="nav-link" href="#" routerLink="/create">Create new gallery</a>
+      </li>
+      
+    </ul>
+            
+            <a class="nav-link" routerLink="/login" *ngIf="!authService.isAuthenticated">Login</a>
+       
+            <a class="nav-link" routerLink="/register" *ngIf="!authService.isAuthenticated">Register</a>
+
+            
+            <!-- Kopiran obican dropdown iz navbar-a i skinuta klasa mr-auto iz ul taga, a dodata klasa dropdown-menu-right dole u dropdown div-->
+
+            <ul id="myid-logged-user-dropdown-links" class="navbar-nav" *ngIf="authService.isAuthenticated">
+              
+              <li class="nav-item dropdown">
+                <!-- Za ovu foru sa ngStyle i && vidi https://stackoverflow.com/questions/45740089/how-to-set-a-ngstyle-in-angular-2-if-condition-matches . To ti sluzi da kad hoces da setujes samo vrednost ako je uslov zadovoljen a vrednost za else te ne zanima. Jos jedno interesantno resenje imas ovde https://stackoverflow.com/questions/37051496/combine-ngstyle-with-condition-if-else/46089536 vidi odgovor od Zohar -->
+                <a class="nav-link dropdown-toggle myclass-account-thumbnail" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" [ngStyle]="{'padding': authService.loggedUserProfileImage && '2px'}">
+                  <img *ngIf="authService.loggedUserProfileImage; else loggedUserNameFirstLetter" src="{{authService.loggedUserProfileImage}}">
+                  <ng-template #loggedUserNameFirstLetter>
+                    <span>{{authService.loggedUserNameFirstLetter}}</span>
+                  </ng-template>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="#" routerLink="/my-account">My account</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#" routerLink="/my-galleries">My galleries</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#" (click)="authService.logout($event)">Logout</a>
+                </div>
+              </li>
+              
+            </ul>
+            <!-- ****************************************** -->
+
+            <span id="myid-logged-user-regular-links">
+              <a class="nav-link" routerLink="/my-account" *ngIf="authService.isAuthenticated">My account</a>
+
+              <a class="nav-link" routerLink="/my-galleries" *ngIf="authService.isAuthenticated">My galleries</a>
+              
+              <!-- Ukoliko nemas u donjem primeru href="#" neces imati lepo dizajniran link  -->
+              
+              <a class="nav-link" href="#" (click)="authService.logout($event)" *ngIf="authService.isAuthenticated">Logout</a>
+            </span>
+  </div>
+</nav>
+
+<!-- <br> -->
+
+<!-- foru da ti uvek skroluje na vrh stranice kad ti se promeni ruta nasao ovde https://stackoverflow.com/questions/48048299/angular-5-scroll-to-top-on-every-route-click , slicnu stvar sa malo vise koda imas ovde (prihvacen odgovor) https://stackoverflow.com/questions/39601026/angular-2-scroll-to-top-on-route-change , a na oba linka imas i varijantu kad hoces da ti se kad kliknes back ili forward u browseru ipak stranica ne skroluje na vrh, nego da ostane tamo gde je bila prethodno (na oba linka je to u odgovoru odmah ispod prihvacenog, a ja zasad ovo resenje nisam stavljao!) -->
+<div class="container-fluid myclass-router-outlet-wrapper">
+	<router-outlet (activate)="onActivate($event)"></router-outlet>
+</div>

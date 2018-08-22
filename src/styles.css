@@ -1,1 +1,201 @@
 /* You can add global styles to this file, and also import other style files */
+
+body{
+	background-image: url(assets/images/Afgalleries_pozadina10-s-f-web.jpg);
+	/*Pomocu ovoga stavljas da ti se pozadinska slika ne skroluje zajedno sa stranicom!*/
+	background-attachment: fixed;
+}
+
+/*Pozadina sa teksturom i gradijentom
+body{
+	background-image: url(assets/images/binding_light_@2X.png);
+}
+
+.myclass-gradient-background{
+	background: repeating-linear-gradient(to bottom, rgba(39,55,230,0.5) 200px, rgba(207,69,45,0.5) 400px, rgba(39,55,230,0.5) 600px);
+}*/
+
+#myid-central-logo{
+	width: 100%;
+	margin-bottom: -2px;
+}
+
+.myclass-router-outlet-wrapper{
+	background-color: white;
+	padding: 50px 80px;
+	min-height: 100vh;
+	/*position: relative;Ovo jos nije istestirano na svim stranama*/
+}
+
+
+.myclass-galleries-container{
+	margin-top: 25px;
+	text-align: center;
+	/*background-color: rgba(230, 219, 25, 0.5);
+	padding: 20px;
+	border-radius: 10px;*/
+}
+
+.myclass-galleries-container > * + * {
+	margin-top: 45px;
+}
+
+/*Stara podesavanja sa flexboxom, prelazim na grid
+.myclass-galleries-images-container{
+	display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.myclass-galleries-index-images{
+	width: 30%;
+	margin-bottom: 20px;
+}*/
+
+.myclass-galleries-images-container{
+	padding: 25px;
+	display: grid;
+	justify-content: space-between;
+	justify-items: center;
+	align-items: center;
+	grid-template-columns: repeat(auto-fill, 30%);
+	grid-row-gap: 25px;
+	/*margin-bottom: 20px;*/
+	margin-bottom: 10px;
+}
+
+.myclass-galleries-index-images{
+	width: 100%;
+}
+
+.myclass-popover-div-wrapper{
+	display: inline-block;
+	margin-top: 2px;
+}
+
+.myclass-popover-div{
+	
+}
+
+.myclass-triangle{
+	font-size: 80px;
+	color: red;
+}
+
+.popover.top.in{
+	background-color: black;
+	border: none;
+	margin-top: -10px;
+
+}
+
+
+.arrow{
+/*	border: 5px solid blue;
+	width: 80px;*/
+}
+
+
+.popover-content{
+	padding: 4px 8px;
+	color: red;
+
+}
+
+#myid-load-more-popover-message{
+	background-color: black;
+	color: red;
+	font-size: 14px;
+	padding: 5px 9px;
+	border-radius: 10px;
+	margin-bottom: -7px;
+	position: relative;
+	z-index: 2;
+}
+
+
+#myid-load-more-popover-arrow{
+	color: black;
+	font-size: 15px;
+	line-height: 1;
+	position: relative;
+	z-index: 1;
+}
+
+.myclass-new-popover-wrapper{
+	visibility: hidden;
+}
+
+button:disabled{
+	cursor: not-allowed;
+}
+
+.btn:focus{
+	box-shadow: none;
+}
+
+@media (max-width: 991.98px){
+	.myclass-router-outlet-wrapper{
+		padding: 25px;
+	}
+}
+
+@media (max-width: 767.98px){
+	.myclass-whole-page-wrapper{
+		max-width: 100%;
+	/*	padding-left: 20px;
+		padding-right: 20px;*/
+	}
+
+	.myclass-router-outlet-wrapper{
+		max-width: 100%;
+	}
+
+	.myclass-galleries-images-container{
+		grid-template-columns: repeat(auto-fill, 32%);
+		padding: 10px;
+		margin-bottom: 10px;
+	}
+
+}
+
+@media (max-width: 575.98px){
+	body{
+		background: none;
+	}
+
+	.myclass-whole-page-wrapper{
+		padding: 0;
+	}
+
+	.myclass-router-outlet-wrapper{
+		padding: 15px 8px;
+	}
+
+	.myclass-galleries-images-container{
+		grid-template-columns: repeat(auto-fill, 49%);
+		padding: 5px;
+		/*margin: 0;*/
+	}
+}
+
+/* ************* CSS za fluid sirinu stranice (mora ostati na dnu nakon svih media queries da bi funkcionisalo) *************** */
+/*Za fluid sirinu stranice skini container klasu i dodaj container-fluid na myclass-whole-page-wrapper i myclass-router-outlet-wrapper divove, i kao sto vidis u ovoj oznacenoj celini koda na myclass-whole-page-wrapper dodaj width kolko procenata stranice hoces da zauzima, a na myclass-router-outlet-wrapper dodaj width: 100%. AKO HOCES DA VRATIS NA STARO SAMO IZBRISI OVAJ CEO OZNACENI DEO KODA I NA POMENUTA DVA DIVA STAVI container KLASU UMESTO container-fluid*/
+.myclass-whole-page-wrapper{
+	width: 90%;
+}
+
+.myclass-router-outlet-wrapper{
+	width: 100%;
+}
+
+@media (max-width: 575.98px){
+	
+	.myclass-whole-page-wrapper{
+		width: 100%;
+	}
+	
+}
+/* ********************************************************** */
+

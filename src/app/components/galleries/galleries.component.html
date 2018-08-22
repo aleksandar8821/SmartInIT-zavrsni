@@ -1,0 +1,17 @@
+<div class="myclass-galleries-container">
+	<div *ngFor="let gallery of showedGalleries" class="card text-left">
+	  <div class="card-header">
+	  	<h5 class="card-title"><a routerLink = "/galleries/{{gallery.id}}">{{ gallery.name }}</a></h5>
+	    {{ gallery.description }}
+	  </div>
+	  <div class="card-body myclass-galleries-images-container">
+	  	<!-- Ranije dok je ovo bio flexbox umesto showedImagesNumber dole u slice funkciji je stajalo gallery.showedImagesNumber -->
+	  	<img *ngFor="let image of gallery.images.slice(0, showedImagesNumber)" src="{{image.url}}" class="myclass-galleries-index-images" (load)="resizeImageIfVertical($event)">
+	  </div>
+	  <div class="card-footer text-muted">
+	    <strong>Created by:</strong> <a routerLink = "/authors/{{gallery.user_id}}">{{ gallery.user.firstName }}  {{ gallery.user.lastName}}</a>
+	    <strong>Created at:</strong> {{ gallery.created_at | date: "MMMM d, y" }}
+	    <span *ngIf="gallery.created_at !== gallery.updated_at"><strong>Last updated at:</strong> {{ gallery.updated_at | date: "MMMM d, y" }}</span>
+	  </div>
+	</div>
+</div>

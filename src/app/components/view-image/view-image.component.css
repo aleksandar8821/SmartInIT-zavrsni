@@ -1,0 +1,267 @@
+.progress{
+	/*visibility: hidden;*/
+	z-index: 999;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 10px;
+	border-radius: 0;
+}
+
+.progress .progress-bar{
+	width: 100%;
+	-webkit-animation: progress-bar-stripes 0.5 linear infinite;
+  	animation: progress-bar-stripes 0.5s linear infinite;
+}
+
+
+.myclass-view-image-background{
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	background-color: #333333C8;
+	z-index: 1000;
+	overflow: auto;
+}
+
+.myclass-view-image-close-link{
+	position: absolute;
+	top: 20px;
+	right: 20px;
+}
+
+.myclass-view-image-close-icon{
+	font-size: 40px;
+	background-color: white;
+	border: 1px solid white;
+	border-radius: 50%;
+	color: #EA0000;
+	transition: border 200ms ease-in-out;
+}
+
+.myclass-view-image-close-icon:hover{
+	border: 3px solid white;
+  cursor: pointer;
+}
+
+.myclass-view-image-container{
+	background-color: white;
+	min-height: 100vh;
+	margin: 0 auto;
+	box-sizing: border-box;
+	width: 65%;
+	padding: 15px;
+}
+
+.myclass-showing-image-wrapper{
+	position: relative;
+	text-align: center;
+	user-select: none;
+}
+
+.myclass-carousel-arrow-link{
+	position: absolute;
+	/*top: 40%;*/
+	height: 100%;
+	width: 100px;
+	text-align: center;
+	visibility: hidden;
+	opacity: 0;
+	transition: transform 200ms ease-in-out, visibility 200ms ease-in-out, opacity 200ms ease-in-out;
+	/*Sto se tice ove novije animacije koja nije radjena u cistom css-u, ovaj pointer-events ti ovde i nije potreban. Zasto? Zato sto kada krene animacija dolazenja arrowa na sliku, ti iako hoverujes u medjuvremenu strelice tranzicija se nece ponovo okinuti, jer ona deluje samo kad se stilovi promene. A posto je animacija vec krenula to jest stilovi su vec promenjeni ti sa hoverom nista ne menjas i nece doci do nikakvog poigravanja strelica i sl...*/
+	/*pointer-events: none;*/
+}
+
+.myclass-carousel-arrow-link:hover{
+	cursor: pointer;
+	/*background-color: #80808050;*/
+}
+
+.myclass-carousel-arrow{
+	font-size: 50px;
+	color: #404040FF;
+	transition: color 200ms ease-in-out, border 200ms ease-in-out;
+	background-color: white;
+	border: 1px solid white;
+	border-radius: 50%;
+
+	position: relative;
+	top: 40%;
+}
+
+/*.myclass-carousel-arrow:hover{
+	color: #808080FF;
+}
+*/
+
+.myclass-carousel-arrow-link:hover .myclass-carousel-arrow{
+	/*color: #5B5B5BFF;*/
+	color: #808080FF;
+}
+
+.myclass-carousel-arrow-link-left{
+	/*left: -70px;*/
+	left: -100px;
+}
+
+.myclass-carousel-arrow-link-right{
+	/*right: -70px;*/
+	right: -100px;
+}
+
+/*Gradijenti koje dobijas na hover linkova
+.myclass-carousel-arrow-link-left:hover{
+	background:   linear-gradient(to right, rgba(181,181,181,0.65) 0%, rgba(246,246,246,0.31) 53%, rgba(255,255,255,0) 100%);
+}
+
+.myclass-carousel-arrow-link-right:hover{
+	background:  linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(246,246,246,0.31) 47%, rgba(181,181,181,0.65) 100%);
+}*/
+
+/*************************************************************************/
+/*Ovako je isla stara animacija za pojavljivanje strelica, jedina je mana ta da se ova animacija primenjuje i kad hoverujes strelice i kad ih hoverujes u momentu kad napustaju povrsinu slike, onda onako poigravaju i to deluje blesavo jbg... Da bi ti ovo proradilo moras jos i da skines gore iz .myclass-carousel-arrow-link pointer-events: none*/
+/* .myclass-showing-image-wrapper:hover .myclass-carousel-arrow-link-left{
+	transform: translate(100px);
+	visibility: visible;
+	opacity: 1;
+}
+
+.myclass-showing-image-wrapper:hover .myclass-carousel-arrow-link-right{
+	transform: translate(-100px);
+	visibility: visible;
+	opacity: 1;
+} */
+/*************************************************************************/
+
+.myclass-carousel-arrow-link-left-animate{
+	transform: translate(100px);
+	visibility: visible;
+	opacity: 1;
+}
+
+.myclass-carousel-arrow-link-right-animate{
+	transform: translate(-100px);
+	visibility: visible;
+	opacity: 1;
+}
+
+#myid-image-info{
+	text-align: left;
+	color: dimgray; 
+	background-color: #FFFCEA;
+	font-size: 20px;
+	padding: 8px 15px;
+	margin-bottom: 8px;
+	border-top: 2px solid #FF6A00FF;
+	border-bottom-right-radius: 15px;
+	border-bottom-left-radius: 15px;
+	user-select: text;
+}
+
+.myclass-showing-image-container{
+	/*Ovo bi trebalo da bude nesto malo vece od font-size za velicinu arrow-a, jer ako se slika npr ne pojavi, da se ovaj div i dalje targetira za pojavljivanje arrowa i da arrowi mogu lepo da stanu unutar ovog diva*/
+	min-height: 80px;
+
+}
+
+.myclass-showing-image{
+	max-width: 100%;
+}
+
+#myid-image-description{
+	text-align: left; 
+	color: dimgray; 
+	background-color: #FFFCEA;
+	margin-top: 8px;
+	padding: 5px;
+	user-select: text;
+}
+
+
+.myclass-add-comment-form{
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.myclass-image-comments{
+	padding-top: 15px;
+}
+
+.myclass-image-comments > * + *{
+	margin-top: 15px;
+	border-top: 1.5px solid #636363FF;
+	padding-top: 10px;
+}
+
+.myclass-account-thumbnail-wrapper{
+	width: 60px;
+}
+
+.myclass-account-thumbnail{
+	margin: 0 auto;
+	display: flex;
+	background-color: darkblue;
+	border-radius: 50%;
+	min-width: 40px;
+	min-height: 40px;
+	max-width: 60px;
+	max-height: 60px;	
+}
+
+.myclass-account-thumbnail img{
+	width: 100%;
+	border-radius: 50%;
+}
+
+.myclass-account-thumbnail span{
+	color: white;
+	margin: auto;
+}
+
+.myclass-delete-link{
+	display: inline-block;
+	border-radius: 50%;
+	overflow: hidden;
+	margin: 0 5px;
+}
+
+.myclass-image-delete{
+	line-height: 1;
+	font-size: 35px;
+	color: #BC0000;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+.myclass-image-delete:hover{
+	color: #EA0000;
+	cursor: pointer;
+}
+
+@media (max-width: 991.98px) {
+	.myclass-view-image-container{
+		width: 80%;
+	}
+
+	.myclass-view-image-close-link{
+		top: 10px;
+		right: 10px;
+	}
+}
+
+
+@media (max-width: 575.98px){
+	.myclass-view-image-close-link{
+		top: 5px;
+	}
+
+	.myclass-view-image-container{
+		position: relative;
+		top: 50px;
+		width: 100%;
+		overflow: hidden;
+	}
+} 

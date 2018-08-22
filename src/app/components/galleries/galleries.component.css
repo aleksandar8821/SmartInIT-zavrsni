@@ -1,0 +1,9 @@
+.card-header{
+	background: linear-gradient(to right, rgba(237,237,237,1) 0%, rgba(246,246,246,1) 53%, rgba(255,255,255,1) 100%);
+	/*background: url(http://api.thumbr.it/whitenoise-361x370.png?background=f0f0f0ff&noise=969696&density=20&opacity=15)*/
+}
+
+.card-footer{
+	background: linear-gradient(to right, rgba(237,237,237,1) 0%, rgba(246,246,246,1) 53%, rgba(255,255,255,1) 100%);
+	/*background: url(http://api.thumbr.it/whitenoise-361x370.png?background=f0f0f0ff&noise=969696&density=20&opacity=15)*/
+}
