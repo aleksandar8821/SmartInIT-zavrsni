@@ -234,7 +234,7 @@ export class ViewGalleryComponent implements OnInit {
     // Da imam utisak unosenja u bazu :)
     setTimeout(() => {
 
-      const galleryComment: GalleryComment = new GalleryComment(this.gallery.comments.length + 1, this.galleryComment.commentBody, 1, new User(1, 'Pera', 'Peric', 'pera@gmail.com'), this.gallery.id)
+      const galleryComment: GalleryComment = new GalleryComment(this.gallery.comments[this.gallery.comments.length - 1].id + 1, this.galleryComment.commentBody, 1, new User(1, 'Pera', 'Peric', 'pera@gmail.com'), this.gallery.id)
 
       const adjustedGalleryCommentObj = {
            comment_body: galleryComment.commentBody,
@@ -301,7 +301,8 @@ export class ViewGalleryComponent implements OnInit {
   public updateGalleryComment(editedGalleryComment: GalleryComment){
     console.log(editedGalleryComment);
     const editedGalleryCommentBody = editedGalleryComment.commentBody
-    
+    const editedGalleryCommentId = editedGalleryComment.id
+
     this.showLoaderDisablePageElements(true)
     this.disableModalElements(true)
      
@@ -309,7 +310,7 @@ export class ViewGalleryComponent implements OnInit {
        this.editGalleryCommentModalButtonTrigger.nativeElement.click()
        this.showLoaderDisablePageElements(false)
        this.disableModalElements(false)
-       let updatedCommentInArray: any = this.commentsArrayReversed.find(comment => comment.id === editedGalleryComment.id)
+       let updatedCommentInArray: any = this.commentsArrayReversed.find(comment => comment.id === editedGalleryCommentId)
        // EKSTRA!!! Kao sto vidis mozes ovde da dodas properti koji ne postoji na tipu GalleryComment, tako sto ga samo prethodno pretvoris u tip any!!!
        updatedCommentInArray.comment_body = editedGalleryCommentBody
        updatedCommentInArray.updated_at = Date.now()

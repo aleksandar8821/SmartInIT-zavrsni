@@ -10,6 +10,7 @@ import { NgForm } from '@angular/forms'
 import { HttpErrorResponse } from '@angular/common/http';
 import { trigger,state,style,transition,animate,keyframes,sequence} from '@angular/animations';
 
+declare var jQuery:any;
 
 @Component({
   selector: 'app-view-image',
@@ -47,6 +48,8 @@ export class ViewImageComponent implements OnInit, OnDestroy {
   public isUserAuthenticated: boolean
   public loggedUserEmail: string
   public imageComment: ImageComment = new ImageComment()
+  public imageCommentForEditing: ImageComment = new ImageComment()
+  public originalImageCommentBeforeEditing: ImageComment = new ImageComment()
   public disableAnimations: boolean = true
   public disableProgressBar: number = 0
   public isDeviceTouchScreen: boolean = false
@@ -55,9 +58,16 @@ export class ViewImageComponent implements OnInit, OnDestroy {
   // @ViewChild("addGalleryCommentForm") addGalleryCommentForm: FormGroup // radilo je i sa FormGroup samo sto izgleda nije pravilno jer je FormGroup za model driven ili ti reactive forme, a ova tvoja je template driven. Vidi ovde https://stackoverflow.com/questions/48681287/reset-form-from-parent-component. Inace ideju za FormGroup pokupio ovde: https://blog.angular-university.io/introduction-to-angular-2-forms-template-driven-vs-model-driven/ i https://codecraft.tv/courses/angular/forms/submitting-and-resetting/
   @ViewChild("addImageCommentForm") addImageCommentForm: NgForm //https://stackoverflow.com/questions/48681287/reset-form-from-parent-component
   @ViewChild("commentsContainer") commentsContainer: ElementRef
+  @ViewChild("editImageCommentModalButtonTrigger") editImageCommentModalButtonTrigger: ElementRef
+  @ViewChild("editImageCommentModal") editGalleryCommentModal: ElementRef
   @ViewChild("arrowLinkLeft") arrowLinkLeft: ElementRef
   @ViewChild("arrowLinkRight") arrowLinkRight: ElementRef
   @ViewChild("showingImageContainer") showingImageContainer: ElementRef
+
+  @ViewChild("modalCloseButton") modalCloseButton: ElementRef
+  @ViewChild("btnSubmitCommentChanges") btnSubmitCommentChanges: ElementRef
+  @ViewChild("modalCancelButton") modalCancelButton: ElementRef
+
 
   // koristio savet odavde https://codeburst.io/the-only-way-to-detect-touch-with-javascript-7791a3346685
   @HostListener('window:touchstart', ['$event'])
@@ -87,7 +97,7 @@ export class ViewImageComponent implements OnInit, OnDestroy {
 
 	}
 
-  constructor(private route: ActivatedRoute, private router: Router, private viewImageService: ViewImageService, private renderer: Renderer2, private galleryService: GalleryService) { 
+  constructor(private route: ActivatedRoute, private router: Router, private viewImageService: ViewImageService, private renderer: Renderer2, private galleryService: GalleryService, private elRef: ElementRef) { 
     this.isUserAuthenticated = Boolean(window.localStorage.getItem('loginToken')); 
     this.loggedUserEmail = window.localStorage.getItem('loggedUserEmail')
   }
@@ -100,6 +110,12 @@ export class ViewImageComponent implements OnInit, OnDestroy {
 
   	// Pomocu ovoga se postize da se moze skrolovati samo ova komponenta, a pozadina da ne moze https://stackoverflow.com/questions/31906059/absolute-positioned-div-prevent-background-scroll?rq=1 . Inace ako hoces preko renderer-a da radis, moras raditi na ovaj nacin, tj. moras da napises document.body kao prvi argument funkcije, jer body ne mozes da targetiras preko ViewChild (vidi sta kaze Günter Zöchbauer https://stackoverflow.com/questions/39971762/add-class-to-body-on-angular2). Kao sto vidis na prethodnom linku koristi se fora da u glavnoj app komponenti podesis da ti njen selektor bude body tag umesto app-root taga, pa da onda koristis HostBinding kako bi stilizovao body. Ja to nisam hteo da radim, jer mi deluje prilicno hacky, pa sam koristio renderer na ovu foru, sto sam pokupio ovde https://stackoverflow.com/questions/43542373/angular2-add-class-to-body-tag , e sad da li je ovo saglasno pravilima angular dom manipulacije, to bas i ne znam, al na ovom linku niko ne spominje da nije saglasno (zapravo spominje se: "This won't work server-side as there's no document there." - mgol. Pa sad ako ti treba server side rendering, onda radi onako da stavljas body selektor u app komponentu... Imas to i na ovom linku https://stackoverflow.com/questions/39971762/add-class-to-body-on-angular2 i ovom https://stackoverflow.com/questions/34430666/angular-2-x-bind-class-on-body-tag/34430979#34430979, https://stackoverflow.com/questions/34636661/how-do-i-change-the-body-class-via-a-typescript-class-angular2/34637039#34637039, https://stackoverflow.com/questions/34881401/style-html-body-from-web-component-angular-2/34892496#34892496 i jos kolko oces mesta...)
   	this.renderer.setStyle(document.body, 'overflow', 'hidden')
+
+    jQuery(this.elRef.nativeElement).on('shown.bs.modal', '#exampleModalCenter', function () {
+      console.log('radim');
+      jQuery('#editedCommentBody').trigger('focus');
+    });
+
   }
 
   public nextImage(){
@@ -316,7 +332,7 @@ export class ViewImageComponent implements OnInit, OnDestroy {
    // Da imam utisak unosenja u bazu :)
    setTimeout(() => {
 
-     const imageComment: ImageComment = new ImageComment(this.showingImage.comments.length + 1, this.imageComment.commentBody, 1, new User(1, 'Pera', 'Peric', 'pera@gmail.com'), this._imageID)
+     const imageComment: ImageComment = new ImageComment(this.showingImage.comments[this.showingImage.comments.length - 1].id + 1, this.imageComment.commentBody, 1, new User(1, 'Pera', 'Peric', 'pera@gmail.com'), this._imageID)
 
      const adjustedImageCommentObj = {
           comment_body: imageComment.commentBody,
@@ -390,6 +406,44 @@ export class ViewImageComponent implements OnInit, OnDestroy {
     
   }
 
+
+  public editImageComment(comment: any){
+    console.log(comment);
+    this.imageCommentForEditing.id = comment.id
+    this.imageCommentForEditing.commentBody = comment.comment_body
+    console.log(this.imageCommentForEditing);
+    this.originalImageCommentBeforeEditing.commentBody = comment.comment_body
+  }
+
+  public updateImageComment(editedGalleryComment: ImageComment){
+    console.log(editedGalleryComment);
+    const editedGalleryCommentBody = editedGalleryComment.commentBody
+    const editedGalleryCommentId = editedGalleryComment.id
+
+    this.showLoaderDisablePageElements(true)
+    this.disableModalElements(true)
+     
+     setTimeout(() => {
+       this.editImageCommentModalButtonTrigger.nativeElement.click()
+       this.showLoaderDisablePageElements(false)
+       this.disableModalElements(false)
+       let updatedCommentInArray: any = this.commentsArrayReversed.find(comment => comment.id === editedGalleryCommentId)
+       // EKSTRA!!! Kao sto vidis mozes ovde da dodas properti koji ne postoji na tipu GalleryComment, tako sto ga samo prethodno pretvoris u tip any!!!
+       updatedCommentInArray.comment_body = editedGalleryCommentBody
+       updatedCommentInArray.updated_at = Date.now()
+
+       const showingImageInGalleryObject = this._gallery.images.find(image => image.id === this._imageID)
+       const editedCommentInGalleryObject: any = showingImageInGalleryObject.comments.find(comment => comment.id === editedGalleryCommentId)
+       editedCommentInGalleryObject.comment_body = editedGalleryCommentBody
+       editedCommentInGalleryObject.updated_at = updatedCommentInArray.updated_at
+
+       // Pri svakoj promeni galerije kao sto je dodavanje ili brisanje komentara, moram ponovo da dobavim galeriju da ne bi koristio stare podatke:
+       // this._gallery = data.gallery
+       // A moram ih proslediti i pozadinskoj view gallery komponenti jer su i u njoj jos stari podaci. Koristim komunikaciju parenta i childa preko servisa kao i ovde https://angular.io/guide/component-interaction#parent-and-children-communicate-via-a-service
+       this.viewImageService.setGalleryUpdatedImageComments(this._gallery)
+
+     }, 500)
+   }
  
   public showLoaderDisablePageElements(show: boolean){
     if(show === true){
@@ -437,7 +491,17 @@ export class ViewImageComponent implements OnInit, OnDestroy {
 
   }
 
-  
+  public disableModalElements(disable: boolean){
+    if(disable === true){
+      this.renderer.setProperty(this.modalCloseButton.nativeElement, 'disabled', true)
+      this.renderer.setProperty(this.btnSubmitCommentChanges.nativeElement, 'disabled', true)
+      this.renderer.setProperty(this.modalCancelButton.nativeElement, 'disabled', true)
+    }else{
+      this.renderer.setProperty(this.modalCloseButton.nativeElement, 'disabled', false)
+      this.renderer.setProperty(this.btnSubmitCommentChanges.nativeElement, 'disabled', false)
+      this.renderer.setProperty(this.modalCancelButton.nativeElement, 'disabled', false)
+    }
+  }
 
   ngOnDestroy(){
   	this.renderer.setStyle(document.body, 'overflow', 'visible') //visible je default vrednost https://developer.mozilla.org/en-US/docs/Web/CSS/overflow
