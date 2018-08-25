@@ -150,7 +150,7 @@ export class AuthService {
       window.localStorage.removeItem('loggedUserEmail');
       window.localStorage.removeItem('loggedUserNameFirstLetter');
       this.loggedUserNameFirstLetter = '';
-      this.router.navigateByUrl('/galleries');
+      this.router.navigateByUrl('/login');
   }
 
 }

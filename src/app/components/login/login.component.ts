@@ -24,12 +24,17 @@ export class LoginComponent implements OnInit {
 
   public login(email: string, password: string){
   	this.renderer.setStyle(this.progressBar.nativeElement, 'visibility', 'visible')
+    this.renderer.setProperty(this.btnLogin.nativeElement, 'disabled', true)
 
   	this.authService.login(email, password).then(() => {
   		this.renderer.setStyle(this.progressBar.nativeElement, 'visibility', 'hidden')
+      this.renderer.setProperty(this.btnLogin.nativeElement, 'disabled', false)
+
   		this.router.navigateByUrl('/galleries');
   	}).catch(() => {
   		this.renderer.setStyle(this.progressBar.nativeElement, 'visibility', 'hidden')
+      this.renderer.setProperty(this.btnLogin.nativeElement, 'disabled', false)
+
   	})
   }
 

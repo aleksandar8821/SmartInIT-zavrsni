@@ -25,8 +25,16 @@ export class RegisterComponent implements OnInit {
   }
 
   public register(user: User){
-    console.log(user);
-    this.authService.register(user);
+    // console.log(user);
+    this.renderer.setStyle(this.progressBar.nativeElement, 'visibility', 'visible')
+    this.renderer.setProperty(this.btnRegister.nativeElement, 'disabled', true)
+
+    setTimeout(() => {
+      this.authService.register(user);
+      this.renderer.setStyle(this.progressBar.nativeElement, 'visibility', 'hidden')
+      this.renderer.setProperty(this.btnRegister.nativeElement, 'disabled', false)
+
+    }, 500)
   }
 
 }
