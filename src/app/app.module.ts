@@ -19,7 +19,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { GalleriesComponent } from './components/galleries/galleries.component';
 
 import { AuthGuard } from './shared/guards/auth.guard';
-
+import { GuestGuard } from './shared/guards/guest.guard';
 
 
 @NgModule({
@@ -41,7 +41,7 @@ import { AuthGuard } from './shared/guards/auth.guard';
     // PopoverModule,
     BrowserAnimationsModule,
   ],
-  providers: [AuthService, GalleryService, AuthGuard],
+  providers: [AuthService, GalleryService, AuthGuard, GuestGuard],
   bootstrap: [AppComponent],
   entryComponents: [ ViewImageComponent ]
 })

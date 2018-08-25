@@ -9,6 +9,7 @@ import { LoginComponent } from '../components/login/login.component';
 import { RegisterComponent } from '../components/register/register.component';
 
 import { AuthGuard } from '../shared/guards/auth.guard';
+import { GuestGuard } from '../shared/guards/guest.guard';
 
 
 const appRoutes: Routes = [
@@ -36,10 +37,12 @@ const appRoutes: Routes = [
 	},
 	{
 			path: 'register',
+			canActivate: [GuestGuard],
 			component: RegisterComponent
 	},
 	{
 			path: 'login',
+			canActivate: [GuestGuard],
 			component: LoginComponent
 	}
 ]
