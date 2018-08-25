@@ -169,62 +169,6 @@ export class ViewGalleryComponent implements OnInit {
     }
   }
 
-  public addGalleryCommentOld(){
-   this.disableAnimations = false
-   this.showLoaderDisablePageElements(true)
-   this.renderer.setProperty(this.btnAddComment.nativeElement, 'disabled', true)
-
-    this.galleryService.addGalleryComment(this.galleryComment, this.gallery).subscribe((storedComment: GalleryComment) => {
-      this.addGalleryCommentForm.reset()
-      // console.log(this.galleryComment);
-      this.commentsContainer.nativeElement.scrollIntoView({ behavior: "smooth", block: "start"})
-      this.commentsArrayReversed.unshift(storedComment)
-
-      this.showLoaderDisablePageElements(false)
-    }, (error: HttpErrorResponse) => {
-      this.showLoaderDisablePageElements(false)
-      this.renderer.setProperty(this.btnAddComment.nativeElement, 'disabled', false)
-
-      //sa for in iteracijom, nisam uspeo da dobavim ove greske, ova funkcija Object.values() je pravo cudo!
-      let errors = Object.values(error.error.errors) 
-      let errorString: string = ''
-      errors.forEach(function(message){
-        errorString += message + '\n'
-      });
-      alert(errorString);
-    })
-  }
-
-  public deleteGalleryCommentOld(comment: GalleryComment){
-    this.disableAnimations = false
-    if(confirm('Are you sure you want to delete this comment?')){
-
-      this.showLoaderDisablePageElements(true)
-      // console.log(comment);
-      this.galleryService.deleteGalleryComment(comment).subscribe((deletedComment: GalleryComment) => {
-        console.log(comment);
-        // ovaj indexOf nije hteo da funkcionise kad bi vracao obrisan komentar sa backenda iako bi rekao da su ta dva objekta identicna, sa ovim comment funkcionise...
-        /*let indexCommentsArrayReversed = this.commentsArrayReversed.indexOf(comment)*/
-        // console.log(indexCommentsArrayReversed);
-        // Ovaj splice metod ima neke 'kontroverze' doduse, mada mislim da meni ovde nece praviti problem (vidi https://stackoverflow.com/questions/3954438/how-to-remove-item-from-array-by-value , https://stackoverflow.com/questions/5767325/how-do-i-remove-a-particular-element-from-an-array-in-javascript i sl.)
-        /*if(indexCommentsArrayReversed !== -1){
-          this.commentsArrayReversed.splice(indexCommentsArrayReversed, 1)
-        }*/
-
-        // element niza ipak brisem preko filter funkcije (potrazi ovde: https://stackoverflow.com/questions/3954438/how-to-remove-item-from-array-by-value) zato sto se teoretski po mom misljenju moze desiti slucaj da se izmedju dva koraka od koliko se sastoji metoda sa splice promeni index od elementa koji hocu da brisem, ukoliko se npr bas izmedju ta dva koraka doda novi element u niz, tako da bi ovo sa filterom trebalo da bude sigurnija metoda:
-        this.commentsArrayReversed = this.commentsArrayReversed.filter(c => c !== comment)
-
-        this.showLoaderDisablePageElements(false)
-      }, (error: HttpErrorResponse) => {
-        this.showLoaderDisablePageElements(false)
-
-        alert(error.error.error)
-      })
-
-    }
-
-    
-  }
 
   public addGalleryComment(){
     this.disableAnimations = false
@@ -278,7 +222,6 @@ export class ViewGalleryComponent implements OnInit {
       // console.log(comment);
       
       setTimeout(() => {
-        // element niza ipak brisem preko filter funkcije (potrazi ovde: https://stackoverflow.com/questions/3954438/how-to-remove-item-from-array-by-value) zato sto se teoretski po mom misljenju moze desiti slucaj da se izmedju dva koraka od koliko se sastoji metoda sa splice promeni index od elementa koji hocu da brisem, ukoliko se npr bas izmedju ta dva koraka doda novi element u niz, tako da bi ovo sa filterom trebalo da bude sigurnija metoda:
         this.commentsArrayReversed = this.commentsArrayReversed.filter(c => c !== comment)
         this.gallery.comments = this.gallery.comments.filter(c => c !== comment)
         // console.log(this.gallery.comments);
@@ -320,17 +263,11 @@ export class ViewGalleryComponent implements OnInit {
  
   public showLoaderDisablePageElements(show: boolean){
     if(show === true){
-      // this.renderer.setStyle(this.progressBar.nativeElement, 'visibility', 'visible')
-      // this.renderer.setStyle(this.disabledOverlay.nativeElement, 'visibility', 'visible')
       this.disableProgressBar++
       console.log(this.disableProgressBar);
-      // this.renderer.setProperty(this.btnAddComment.nativeElement, 'disabled', true)
     }else{
-      // this.renderer.setStyle(this.progressBar.nativeElement, 'visibility', 'hidden')
-      // this.renderer.setStyle(this.disabledOverlay.nativeElement, 'visibility', 'hidden')
       this.disableProgressBar--
       console.log(this.disableProgressBar);
-      // this.renderer.setProperty(this.btnAddComment.nativeElement, 'disabled', false)
     }
   }
 

@@ -171,14 +171,7 @@ export class ViewImageComponent implements OnInit, OnDestroy {
           if(event.relatedTarget.id === "myid-carousel-arrow-left" || event.relatedTarget.id === "myid-carousel-arrow-right" || event.relatedTarget.id === "myid-carousel-arrow-left-link" || event.relatedTarget.id === "myid-carousel-arrow-right-link" || event.relatedTarget.parentElement.id === "myid-carousel-arrow-left" || event.relatedTarget.parentElement.id === "myid-carousel-arrow-right"){
 
               return;
-
-               /* Kao sto vidis ovaj deo koda ti i nije potreban, ali vidis i sam da ti browseri cudno malo funkcionisu, tako da mozda ti ovo i zatreba, zasad je dovoljan ovaj return;
-
-               this.renderer.addClass(this.arrowLinkLeft.nativeElement, "myclass-carousel-arrow-link-left-animate")
-               this.renderer.setStyle(this.arrowLinkLeft.nativeElement, 'pointer-events', 'auto')
-
-               this.renderer.addClass(this.arrowLinkRight.nativeElement, "myclass-carousel-arrow-link-right-animate")
-               this.renderer.setStyle(this.arrowLinkRight.nativeElement, 'pointer-events', 'auto')*/
+              
             
              // Testiranje:
              // this.renderer.setStyle(this.arrowLinkRight.nativeElement, 'background-color', 'yellow')
@@ -249,78 +242,6 @@ export class ViewImageComponent implements OnInit, OnDestroy {
     event.preventDefault()
   	this.viewImageService.destroyComponent(this.componentReference)
     this.router.navigateByUrl('/galleries/' + this.galleryID);
-  }
-
-  public addImageCommentOld(){
-   this.disableAnimations = false
-   this.showLoaderDisablePageElements(true)
-   this.renderer.setProperty(this.btnAddComment.nativeElement, 'disabled', true)
-
-    this.galleryService.addImageComment(this.imageComment, this.showingImage).subscribe((data: { storedCommentWithUser: ImageComment, gallery: Gallery}) => {
-      this.addImageCommentForm.reset()
-      // console.log(this.imageComment);
-      this.commentsContainer.nativeElement.scrollIntoView({ behavior: "smooth", block: "start"})
-      console.log(data);
-      this.commentsArrayReversed.unshift(data.storedCommentWithUser)
-      // Pri svakoj promeni galerije kao sto je dodavanje ili brisanje komentara, moram ponovo da dobavim galeriju da ne bi koristio stare podatke:
-      this._gallery = data.gallery
-      // A moram ih proslediti i pozadinskoj view gallery komponenti jer su i u njoj jos stari podaci. Koristim komunikaciju parenta i childa preko servisa kao i ovde https://angular.io/guide/component-interaction#parent-and-children-communicate-via-a-service
-      this.viewImageService.setGalleryUpdatedImageComments(data.gallery)
-
-      this.showLoaderDisablePageElements(false)
-    }, (error: HttpErrorResponse) => {
-      this.showLoaderDisablePageElements(false)
-      this.renderer.setProperty(this.btnAddComment.nativeElement, 'disabled', false)
-
-      //sa for in iteracijom, nisam uspeo da dobavim ove greske, ova funkcija Object.values() je pravo cudo!
-      if(error.error.errors){
-        let errors = Object.values(error.error.errors) 
-        let errorString: string = ''
-        errors.forEach(function(message){
-          errorString += message + '\n'
-        });
-        alert(errorString);
-        
-      }else{
-        alert(error.error.error)
-      }
-    })
-  }
-
-  public deleteImageCommentOld(comment: ImageComment){
-    this.disableAnimations = false
-    if(confirm('Are you sure you want to delete this comment?')){
-
-      this.showLoaderDisablePageElements(true)
-      // console.log(comment);
-      this.galleryService.deleteImageComment(comment).subscribe((gallery: Gallery) => {
-        console.log(comment);
-        // ovaj indexOf nije hteo da funkcionise kad bi vracao obrisan komentar sa backenda iako bi rekao da su ta dva objekta identicna, sa ovim comment funkcionise...
-        /*let indexCommentsArrayReversed = this.commentsArrayReversed.indexOf(comment)*/
-        // console.log(indexCommentsArrayReversed);
-        // Ovaj splice metod ima neke 'kontroverze' doduse, mada mislim da meni ovde nece praviti problem (vidi https://stackoverflow.com/questions/3954438/how-to-remove-item-from-array-by-value , https://stackoverflow.com/questions/5767325/how-do-i-remove-a-particular-element-from-an-array-in-javascript i sl.)
-        /*if(indexCommentsArrayReversed !== -1){
-          this.commentsArrayReversed.splice(indexCommentsArrayReversed, 1)
-        }*/
-
-        // element niza ipak brisem preko filter funkcije (potrazi ovde: https://stackoverflow.com/questions/3954438/how-to-remove-item-from-array-by-value) zato sto se teoretski po mom misljenju moze desiti slucaj da se izmedju dva koraka od koliko se sastoji metoda sa splice promeni index od elementa koji hocu da brisem, ukoliko se npr bas izmedju ta dva koraka doda novi element u niz, tako da bi ovo sa filterom trebalo da bude sigurnija metoda:
-        this.commentsArrayReversed = this.commentsArrayReversed.filter(c => c !== comment)
-        // Pri svakoj promeni galerije kao sto je dodavanje ili brisanje komentara, moram ponovo da dobavim galeriju da ne bi koristio stare podatke:
-        this._gallery = gallery
-        // A moram ih proslediti i pozadinskoj view gallery komponenti jer su i u njoj jos stari podaci. Koristim komunikaciju parenta i childa preko servisa kao i ovde https://angular.io/guide/component-interaction#parent-and-children-communicate-via-a-service
-        this.viewImageService.setGalleryUpdatedImageComments(gallery)
-
-
-        this.showLoaderDisablePageElements(false)
-      }, (error: HttpErrorResponse) => {
-        this.showLoaderDisablePageElements(false)
-
-        alert(error.error.error)
-      })
-
-    }
-
-    
   }
 
 
@@ -447,17 +368,11 @@ export class ViewImageComponent implements OnInit, OnDestroy {
  
   public showLoaderDisablePageElements(show: boolean){
     if(show === true){
-      // this.renderer.setStyle(this.progressBar.nativeElement, 'visibility', 'visible')
-      // this.renderer.setStyle(this.disabledOverlay.nativeElement, 'visibility', 'visible')
       this.disableProgressBar++
       console.log(this.disableProgressBar);
-      // this.renderer.setProperty(this.btnAddComment.nativeElement, 'disabled', true)
     }else{
-      // this.renderer.setStyle(this.progressBar.nativeElement, 'visibility', 'hidden')
-      // this.renderer.setStyle(this.disabledOverlay.nativeElement, 'visibility', 'hidden')
       this.disableProgressBar--
       console.log(this.disableProgressBar);
-      // this.renderer.setProperty(this.btnAddComment.nativeElement, 'disabled', false)
     }
   }
 
