@@ -8,6 +8,9 @@ import { ViewImageComponent } from '../components/view-image/view-image.componen
 import { LoginComponent } from '../components/login/login.component';
 import { RegisterComponent } from '../components/register/register.component';
 
+import { AuthGuard } from '../shared/guards/auth.guard';
+
+
 const appRoutes: Routes = [
 	{
 	    path: '',
@@ -16,15 +19,18 @@ const appRoutes: Routes = [
 	},
 	{
       path: 'galleries',
+      canActivate: [AuthGuard],
       component: GalleriesComponent
   },
 	{
 	    path: 'galleries/:galleryID',
+	    canActivate: [AuthGuard],
 	    data: { reuse: true },
 	    component: ViewGalleryComponent
 	},
 	{
 	    path: 'galleries/:galleryID/:imageID',
+	    canActivate: [AuthGuard],
 	    data: { reuse: true },
 	    component: ViewGalleryComponent
 	},
