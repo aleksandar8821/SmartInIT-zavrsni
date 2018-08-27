@@ -33,7 +33,7 @@
 		</div>
 
 	  <div class="card-footer text-muted myclass-view-gallery-footer">
-	    <strong>Created by:</strong> <a routerLink = "/authors/{{gallery.user_id}}">{{ gallery.user.first_name }}  {{ gallery.user.last_name}}</a>
+	    <strong>Created by:</strong> <a href="#" (click)="$event.preventDefault()">{{ gallery.user.first_name }}  {{ gallery.user.last_name}}</a>
 	    <strong>Created at:</strong> {{ gallery.created_at | date: "MMMM d, y" }}
 	    <span *ngIf="gallery.created_at !== gallery.updated_at"><strong>Last updated at:</strong> {{ gallery.updated_at | date: "MMMM d, y" }}</span>
 	  </div>

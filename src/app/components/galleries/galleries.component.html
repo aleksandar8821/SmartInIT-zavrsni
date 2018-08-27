@@ -9,7 +9,7 @@
 	  	<img *ngFor="let image of gallery.images.slice(0, showedImagesNumber)" src="{{image.url}}" class="myclass-galleries-index-images" (load)="resizeImageIfVertical($event)">
 	  </div>
 	  <div class="card-footer text-muted">
-	    <strong>Created by:</strong> <a routerLink = "/authors/{{gallery.user_id}}">{{ gallery.user.firstName }}  {{ gallery.user.lastName}}</a>
+	    <strong>Created by:</strong> <a href="#" (click)="$event.preventDefault()">{{ gallery.user.firstName }}  {{ gallery.user.lastName}}</a>
 	    <strong>Created at:</strong> {{ gallery.created_at | date: "MMMM d, y" }}
 	    <span *ngIf="gallery.created_at !== gallery.updated_at"><strong>Last updated at:</strong> {{ gallery.updated_at | date: "MMMM d, y" }}</span>
 	  </div>

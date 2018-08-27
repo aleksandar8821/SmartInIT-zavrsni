@@ -8,7 +8,7 @@
 
 	<div class="myclass-view-image-container">
 			
-			<h1 *ngIf="_gallery" id="myid-image-info"><strong>Gallery:</strong> <a href="#" (click)="closeImage($event)" style="font-weight: normal">{{_gallery.name}}</a> <strong>Author:</strong> <a routerLink = "/authors/{{_gallery.user_id}}" style="font-weight: normal">{{_gallery.user.first_name}} {{_gallery.user.last_name}}</a></h1>
+			<h1 *ngIf="_gallery" id="myid-image-info"><strong>Gallery:</strong> <a href="#" (click)="closeImage($event)" style="font-weight: normal">{{_gallery.name}}</a> <strong>Author:</strong> <a href="#" (click)="$event.preventDefault()" style="font-weight: normal">{{_gallery.user.first_name}} {{_gallery.user.last_name}}</a></h1>
 
 			<div class="myclass-showing-image-wrapper">
 

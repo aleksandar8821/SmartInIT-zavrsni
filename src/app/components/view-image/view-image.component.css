@@ -39,11 +39,12 @@
 	border: 1px solid white;
 	border-radius: 50%;
 	color: #EA0000;
-	transition: border 200ms ease-in-out;
+	transition: border 200ms ease-in-out, color 200ms ease-in-out;
 }
 
 .myclass-view-image-close-icon:hover{
-	border: 3px solid white;
+	border: 1px solid gold;
+	color: #BC0000;
   cursor: pointer;
 }
 
